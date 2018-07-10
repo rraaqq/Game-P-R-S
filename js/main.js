@@ -1,116 +1,198 @@
-var output = document.getElementById('output');
-var result = document.getElementById('result');
-var rounds = document.getElementById('rounds');
 
-var paperButton = document.getElementById('paper');
-var rockButton = document.getElementById('rock');
-var scissorsButton = document.getElementById('scissors');
-var gameButton = document.getElementById('game');
+var params = {
+    output: document.getElementById('output'), 
+    result: document.getElementById('result'),
+    rounds: document.getElementById('rounds'),
+    paperButton: document.getElementById('paper'),
+    rockButton: document.getElementById('rock'),
+    scissorsButton: document.getElementById('scissors'),
+    gameButton: document.getElementById('game'),
+    countingRounds: 0,
+    userScore: 0,
+    computerScore: 0,
+    range: '',
+    progress: []
+};
 
-var userScore = 0;
-var computerScore = 0;
-var range;
 
 // Function - Computer move
 
-const computer = () => Math.floor((Math.random() * 3) + 1);
-
+const computer = () => {
+    var gameArr = ['paper', 'rock', 'scissors'];
+    return gameArr[Math.floor(Math.random() * 3)];
+};
+ 
 // Function - Write result
 
-var writeResult = function (text, cMove, uMove) {
-    output.innerHTML = 'YOU ' + text + ': you played ' + uMove + ', computer played' + cMove + '<br>';
+var writeResult = function (text, uMove, cMove) {
+    output.innerHTML = 'YOU ' + text + ': you played ' + uMove + ', computer played ' + cMove + '<br>';
 };
 
 // Function - Add points
 
 var addPoints = function (isPlayerWon) {
     if (isPlayerWon) {
-        userScore++;
+        params.userScore++;
     } else {
-        computerScore++;
+        params.computerScore++;
     }
     writeScore();
 };
 
 // Function - Write Score
 
-var writeScore = () => result.innerHTML = 'Player ' + userScore + ' : ' + computerScore + ' Computer';
+var writeScore = () => result.innerHTML = 'Player ' + params.userScore + ' : ' + params.computerScore + ' Computer';
 
 // Function - Finish the game
 
 var checkResult = function (userScore, computerScore) {
-    if (userScore == range) {
-        output.insertAdjacentHTML('beforeend', ' YOU WON THE ENTIRE GAME!!!' + '<br><br>' + 'Please press the new game button!');
+    if (params.userScore == params.range) {
+        addTable('#modal-won');
+        document.querySelector('#modal-overlay').classList.add('show');
+        document.querySelector('#modal-won').classList.add('show');
         disabledButton(true);
-    } else if (computerScore == range) {
-        output.insertAdjacentHTML('beforeend', ' YOU LOST THE ENTIRE GAME!!!' + '<br><br>' + 'Game over, please press the new game button!');
+    } else if (params.computerScore == params.range) {
+        addTable('#modal-lose');
+        document.querySelector('#modal-overlay').classList.add('show');
+        document.querySelector('#modal-lose').classList.add('show');
         disabledButton(true);
-    }
+    } 
 };
 
 // Function - Button visible
 
 var disabledButton = function (visible) {
-    paperButton.disabled = visible;
-    rockButton.disabled = visible;
-    scissorsButton.disabled = visible;
+    params.paperButton.disabled = visible;
+    params.rockButton.disabled = visible;
+    params.scissorsButton.disabled = visible;
 };
 
 writeScore();
 
+// Object Constructor
+
+function GameProgress(round, player, comp, roundS, gameS) {
+    this.round = round;
+    this.playerM = player;
+    this.compM = comp;
+    this.roundScore = roundS;
+    this.gameScore = gameS;
+}
+
+
 // Function - Player Move
 
-var playerMove = function (userMove, uMove) {
+var playerMove = function (userMove) {
     var computerMove = computer();
     if (computerMove == userMove) {
-        writeResult('DRAW!', uMove, uMove);
-    } else if (userMove == 1) {
-        if (computerMove == 2) {
-            writeResult('WON!', ' Rock', uMove);
+        writeResult('DRAW!', userMove, computerMove);
+    } else if (userMove == 'paper') {
+        if (computerMove == 'rock') {
+            writeResult('WON!', userMove, computerMove);
             addPoints(true);
-        } else if (computerMove == 3) {
-            writeResult('LOST!', ' Scissors', uMove);
+        } else if (computerMove == 'scissors') {
+            writeResult('LOST!', userMove, computerMove);
             addPoints(false);
         }
-    } else if (userMove == 2) {
-        if (computerMove == 1) {
-            writeResult('LOST!', ' Paper', uMove);
+    } else if (userMove == 'rock') {
+        if (computerMove == 'paper') {
+            writeResult('LOST!', userMove, computerMove);
             addPoints(false);
-        } else if (computerMove == 3) {
-            writeResult('WON!', ' Scissors', uMove);
+        } else if (computerMove == 'scissors') {
+            writeResult('WON!', userMove, computerMove);
             addPoints(true);
         }
-    } else if (userMove == 3) {
-        if (computerMove == 1) {
-            writeResult('WON!', ' Paper', uMove);
+    } else if (userMove == 'scissors') {
+        if (computerMove == 'paper') {
+            writeResult('WON!', userMove, computerMove);
             addPoints(true);
-        } else if (computerMove == 2) {
-            writeResult('LOST!', ' Rock', uMove);
+        } else if (computerMove == 'rock') {
+            writeResult('LOST!', userMove, computerMove);
             addPoints(false);
         }
     }
-    checkResult(userScore, computerScore);
+    checkResult(params.userScore, params.computerScore); 
+    params.countingRounds++;
+    params.progress.push(new GameProgress(params.countingRounds, userMove, computerMove, writeScore()));
+    console.log(params.progress);
 };
-
 disabledButton(true);
 
 // Events
 
-paperButton.addEventListener('click', function () {
-    playerMove(1, ' Paper');
-});
-rockButton.addEventListener('click', function () {
-    playerMove(2, ' Rock');
-});
-scissorsButton.addEventListener('click', function () {
-    playerMove(3, ' Scissors');
+var buttonsMove = document.querySelectorAll('.player-move');
+
+for (var i = 0; i < buttonsMove.length; i++) {
+    buttonsMove[i].addEventListener('click', function (event) {
+        playerMove(event.target.getAttribute('data-move'));
+    });
+}
+
+// New game button
+
+    params.gameButton.addEventListener('click', function () {
+    params.range = window.prompt('How many rounds?');
+    params.rounds.innerHTML = params.range;
+    disabledButton(false);
+    params.userScore = 0;
+    params.computerScore = 0;
+    params.countingRounds = 0;
+    params.progress = [];
+    writeScore();
+    removeTable();
+    
 });
 
-gameButton.addEventListener('click', function () {
-    range = window.prompt('How many rounds?');
-    rounds.innerHTML = range;
-    disabledButton(false);
-    userScore = 0;
-    computerScore = 0;
-    writeScore();
-});
+
+// Modal
+
+	var hideModal = function (event) {
+		event.preventDefault();
+		document.querySelector('#modal-overlay').classList.remove('show');
+	};
+
+	var closeButtons = document.querySelectorAll('.modal .close');
+	for (var i = 0; i < closeButtons.length; i++) {
+		closeButtons[i].addEventListener('click', hideModal);
+	}
+
+	document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+
+	var modals = document.querySelectorAll('.modal');
+
+	for (var i = 0; i < modals.length; i++) {
+		modals[i].addEventListener('click', function (event) {
+			event.stopPropagation();
+		});
+	}
+
+// Function - Create table
+
+function addTable(id) {
+    var myTableDiv = document.querySelector(id);
+    
+    var table = document.createElement('table');
+    table.border = '1';
+    
+    var tableBody = document.createElement('tbody');
+    table.appendChild(tableBody);
+
+    for (var i = 0; i < params.countingRounds; i++) {
+        var tr = document.createElement('tr');
+        tableBody.appendChild(tr);
+        for (var j = 0; j < 5; j++) {
+            var td = document.createElement('td');
+            td.appendChild(document.createTextNode('Cell'));
+            tr.appendChild(td);
+        }
+    }
+    
+    myTableDiv.appendChild(table);
+};
+
+// Function - Remove table
+
+function removeTable() {
+    var table = document.querySelector('table');
+    table.remove();
+};

@@ -13,11 +13,28 @@
             <div id="rounds"></div>
             <div id="output"></div>
             <div id="player">
-                <button id="paper">PAPER</button>
-                <button id="rock">ROCK</button>
-                <button id="scissors">SCISSORS</button>
+                <button id="paper" class="player-move" data-move="paper">PAPER</button>
+                <button id="rock" class="player-move" data-move="rock">ROCK</button>
+                <button id="scissors" class="player-move" data-move="scissors">SCISSORS</button>
             </div>
             <button id="game">New Game</button>
+        </div>
+<!-- Modal -->
+        <div class="overlay" id="modal-overlay">
+            <div class="modal" id="modal-won">
+                <a href="#" class="close">x</a>
+                <header>YOU WON THE ENTIRE GAME!!!</header>
+                <div class="content">
+                    <p>Please press the new game button!</p>
+                </div>
+            </div>
+            <div class="modal" id="modal-lose">
+                <a href="#" class="close">x</a>
+                <header>YOU LOST THE ENTIRE GAME!!!</header>
+                <div class="content">
+                    <p>Game over, please press the new game button!</p>
+                </div>
+            </div>
         </div>
         <script src="js/main.js"></script>
     </body>
