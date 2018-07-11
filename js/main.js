@@ -1,6 +1,5 @@
-
 var params = {
-    output: document.getElementById('output'), 
+    output: document.getElementById('output'),
     result: document.getElementById('result'),
     rounds: document.getElementById('rounds'),
     paperButton: document.getElementById('paper'),
@@ -8,6 +7,7 @@ var params = {
     scissorsButton: document.getElementById('scissors'),
     gameButton: document.getElementById('game'),
     countingRounds: 0,
+    roundResult: '',
     userScore: 0,
     computerScore: 0,
     range: '',
@@ -21,11 +21,12 @@ const computer = () => {
     var gameArr = ['paper', 'rock', 'scissors'];
     return gameArr[Math.floor(Math.random() * 3)];
 };
- 
+
 // Function - Write result
 
 var writeResult = function (text, uMove, cMove) {
     output.innerHTML = 'YOU ' + text + ': you played ' + uMove + ', computer played ' + cMove + '<br>';
+    params.roundResult = text;
 };
 
 // Function - Add points
@@ -111,12 +112,12 @@ var playerMove = function (userMove) {
             addPoints(false);
         }
     }
-    checkResult(params.userScore, params.computerScore); 
+    checkResult(params.userScore, params.computerScore);
     params.countingRounds++;
-    params.progress.push(new GameProgress(params.countingRounds, userMove, computerMove, writeScore()));
-    console.log(params.progress);
+    params.progress.push(new GameProgress(params.countingRounds, userMove, computerMove, writeScore(), params.roundResult));  
 };
 disabledButton(true);
+
 
 // Events
 
@@ -130,7 +131,7 @@ for (var i = 0; i < buttonsMove.length; i++) {
 
 // New game button
 
-    params.gameButton.addEventListener('click', function () {
+params.gameButton.addEventListener('click', function () {
     params.range = window.prompt('How many rounds?');
     params.rounds.innerHTML = params.range;
     disabledButton(false);
@@ -139,54 +140,54 @@ for (var i = 0; i < buttonsMove.length; i++) {
     params.countingRounds = 0;
     params.progress = [];
     writeScore();
-    removeTable();
-    
 });
 
 
 // Modal
 
-	var hideModal = function (event) {
-		event.preventDefault();
-		document.querySelector('#modal-overlay').classList.remove('show');
-	};
+var hideModal = function (event) {
+    event.preventDefault();
+    document.querySelector('#modal-overlay').classList.remove('show');
+    removeTable();
+};
 
-	var closeButtons = document.querySelectorAll('.modal .close');
-	for (var i = 0; i < closeButtons.length; i++) {
-		closeButtons[i].addEventListener('click', hideModal);
-	}
+var closeButtons = document.querySelectorAll('.modal .close');
+for (var i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].addEventListener('click', hideModal);
+}
 
-	document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+document.querySelector('#modal-overlay').addEventListener('click', hideModal);
 
-	var modals = document.querySelectorAll('.modal');
+var modals = document.querySelectorAll('.modal');
 
-	for (var i = 0; i < modals.length; i++) {
-		modals[i].addEventListener('click', function (event) {
-			event.stopPropagation();
-		});
-	}
+for (var i = 0; i < modals.length; i++) {
+    modals[i].addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+}
 
 // Function - Create table
 
 function addTable(id) {
     var myTableDiv = document.querySelector(id);
-    
+
     var table = document.createElement('table');
     table.border = '1';
-    
+
     var tableBody = document.createElement('tbody');
     table.appendChild(tableBody);
 
-    for (var i = 0; i < params.countingRounds; i++) {
+    for (var i = 0; i < params.progress.length; i++) {
+        var progressObj = params.progress[i];
+        var progressKeys = Object.keys(progressObj);
         var tr = document.createElement('tr');
         tableBody.appendChild(tr);
-        for (var j = 0; j < 5; j++) {
+        for (var j = 0; j < progressKeys.length; j++) {
             var td = document.createElement('td');
-            td.appendChild(document.createTextNode('Cell'));
+            td.appendChild(document.createTextNode(progressObj[progressKeys[j]]));
             tr.appendChild(td);
         }
     }
-    
     myTableDiv.appendChild(table);
 };
 
