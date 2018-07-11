@@ -148,6 +148,10 @@ params.gameButton.addEventListener('click', function () {
 var hideModal = function (event) {
     event.preventDefault();
     document.querySelector('#modal-overlay').classList.remove('show');
+    var modalsRemove = document.querySelectorAll('.modal');
+		for (var i = 0; i < modalsRemove.length; i++) {
+			modals[i].classList.remove('show');
+		}
     removeTable();
 };
 
