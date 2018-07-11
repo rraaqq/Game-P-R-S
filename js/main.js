@@ -57,7 +57,7 @@ var checkResult = function (userScore, computerScore) {
         document.querySelector('#modal-overlay').classList.add('show');
         document.querySelector('#modal-lose').classList.add('show');
         disabledButton(true);
-    } 
+    }
 };
 
 // Function - Button visible
@@ -112,9 +112,9 @@ var playerMove = function (userMove) {
             addPoints(false);
         }
     }
-    checkResult(params.userScore, params.computerScore);
     params.countingRounds++;
-    params.progress.push(new GameProgress(params.countingRounds, userMove, computerMove, writeScore(), params.roundResult));  
+    params.progress.push(new GameProgress(params.countingRounds, userMove, computerMove, writeScore(), params.roundResult));
+    checkResult(params.userScore, params.computerScore);
 };
 disabledButton(true);
 
