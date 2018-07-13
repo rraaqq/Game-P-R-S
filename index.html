@@ -1,41 +1,37 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Game</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
-    </head>
-    <body>
-        <div class="container">
-            <div id="result"></div>
-            <div id="rounds"></div>
-            <div id="output"></div>
-            <div id="player">
-                <button id="paper" class="player-move" data-move="paper">PAPER</button>
-                <button id="rock" class="player-move" data-move="rock">ROCK</button>
-                <button id="scissors" class="player-move" data-move="scissors">SCISSORS</button>
-            </div>
-            <button id="game">New Game</button>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div id="result"></div>
+        <div id="rounds"></div>
+        <div id="output"></div>
+        <div id="player">
+            <button id="paper" class="player-move" data-move="paper">PAPER</button>
+            <button id="rock" class="player-move" data-move="rock">ROCK</button>
+            <button id="scissors" class="player-move" data-move="scissors">SCISSORS</button>
         </div>
-<!-- Modal -->
-        <div class="overlay" id="modal-overlay">
-            <div class="modal" id="modal-won">
-                <a href="#" class="close">x</a>
-                <header>YOU WON THE ENTIRE GAME!!!</header>
-                <div class="content">
-                    <p>Please press the new game button!</p>
-                </div>
-            </div>
-            <div class="modal" id="modal-lose">
-                <a href="#" class="close">x</a>
-                <header>YOU LOST THE ENTIRE GAME!!!</header>
-                <div class="content">
-                    <p>Game over, please press the new game button!</p>
-                </div>
+        <button id="game">New Game</button>
+    </div>
+    <!-- Modal -->
+    <div class="overlay" id="modal-overlay">
+        <div class="modal show" id="modal">
+            <a href="#" class="close">x</a>
+            <header class="modal-header"></header>
+            <div class="content">
+                <p class="modal-p"></p>
             </div>
         </div>
-        <script src="js/main.js"></script>
-    </body>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
 </html>

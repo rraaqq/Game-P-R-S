@@ -47,15 +47,10 @@ var writeScore = () => result.innerHTML = 'Player ' + params.userScore + ' : ' +
 // Function - Finish the game
 
 var checkResult = function (userScore, computerScore) {
-    if (params.userScore == params.range) {
-        addTable('#modal-won');
+    if (userScore == params.range || computerScore == params.range) {
+        addTable();
         document.querySelector('#modal-overlay').classList.add('show');
-        document.querySelector('#modal-won').classList.add('show');
-        disabledButton(true);
-    } else if (params.computerScore == params.range) {
-        addTable('#modal-lose');
-        document.querySelector('#modal-overlay').classList.add('show');
-        document.querySelector('#modal-lose').classList.add('show');
+        document.querySelector('.modal-header').innerHTML = 'YOU ' + (params.userScore == params.range ? 'WON' : 'LOSE') + ' THE ENTIRE GAME!!!';
         disabledButton(true);
     }
 };
@@ -79,7 +74,6 @@ function GameProgress(round, player, comp, roundS, gameS) {
     this.roundScore = roundS;
     this.gameScore = gameS;
 }
-
 
 // Function - Player Move
 
@@ -148,10 +142,7 @@ params.gameButton.addEventListener('click', function () {
 var hideModal = function (event) {
     event.preventDefault();
     document.querySelector('#modal-overlay').classList.remove('show');
-    var modalsRemove = document.querySelectorAll('.modal');
-		for (var i = 0; i < modalsRemove.length; i++) {
-			modals[i].classList.remove('show');
-		}
+   // var modalsRemove = document.querySelector('.modal').classList.remove('show');
     removeTable();
 };
 
@@ -172,8 +163,8 @@ for (var i = 0; i < modals.length; i++) {
 
 // Function - Create table
 
-function addTable(id) {
-    var myTableDiv = document.querySelector(id);
+function addTable() {
+    var myTableDiv = document.querySelector('.modal');
 
     var table = document.createElement('table');
     table.border = '1';
